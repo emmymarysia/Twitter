@@ -13,7 +13,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         app:counterEnabled="true"
-        app:counterMaxLength="140"
+        app:counterMaxLength="280"
         app:counterOverflowTextAppearance="@style/counterOverride"
         app:counterTextAppearance="@style/counterText"
         app:layout_constraintStart_toStartOf="parent"
