@@ -38,7 +38,7 @@ import okhttp3.Headers;
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
 
-    private final int REQUEST_CODE = 20;
+    public static final int REQUEST_CODE = 20;
     private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
