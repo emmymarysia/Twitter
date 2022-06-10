@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,7 +77,31 @@ import okhttp3.Headers;
         //recycler view setup: layout manager and adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.messages:
+                        // do something here
+                        return true;
+                    case R.id.notifications:
+                        // do something here
+                        return true;
+                    case R.id.profile:
+                        // do something here
+                        return true;
+                    case R.id.home:
+                        //do something here
+                        return true;
+                    default: return true;
+                }
+            }
+        });
+
         //find the button
+        /*
         Button btLogout = findViewById(R.id.btLogout);
         btLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +109,7 @@ import okhttp3.Headers;
                 onLogoutButton();
                 finish();
             }
-        });
+        }); */
 
         populateHomeTimeline(null);
 
