@@ -150,7 +150,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 }
             });
 
-            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            Glide.with(context).load(tweet.user.profileImageUrl).centerInside().transform(new RoundedCorners(90)).into(ivProfileImage);
             int radius = 30;
             if (tweet.hasMedia) {
                 Glide.with(context).load(tweet.mediaUrl).centerInside().transform(new RoundedCorners(radius)).into(ivMedia);
