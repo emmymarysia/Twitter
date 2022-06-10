@@ -38,6 +38,7 @@ import okhttp3.Headers;
     SwipeRefreshLayout swipeContainer;
 
     private final int REQUEST_CODE = 20;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,9 @@ import okhttp3.Headers;
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                fetchTimelineAsync(0);
+                adapter.clear();
+                populateHomeTimeline(null);
+                swipeContainer.setRefreshing(false);
             }
         });
         // Configure the refreshing colors
@@ -63,6 +66,7 @@ import okhttp3.Headers;
                 android.R.color.holo_red_light);
 
         client = TwitterApp.getRestClient(this);
+
 
         //find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
@@ -81,35 +85,20 @@ import okhttp3.Headers;
                 finish();
             }
         });
-        populateHomeTimeline();
+
+        populateHomeTimeline(null);
+
+        scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) rvTweets.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                String maxId = tweets.get(tweets.size()-1).tweetId;
+                populateHomeTimeline(maxId);
+            }
+        };
+        rvTweets.addOnScrollListener(scrollListener);
     }
-
-     public void fetchTimelineAsync(int page) {
-         // Send the network request to fetch the updated data
-         // `client` here is an instance of Android Async HTTP
-         // getHomeTimeline is an example endpoint.
-         client.getHomeTimeline(new JsonHttpResponseHandler() {
-             @Override
-             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                 //clear out old items
-                 adapter.clear();
-                 //add the new items to the adapter
-                 try {
-                     adapter.addAll(Tweet.fromJsonArray(json.jsonArray));
-                 } catch (JSONException e) {
-                     e.printStackTrace();
-                 }
-                 //call setRefreshing(false) to signal refresh has finished
-                 swipeContainer.setRefreshing(false);
-             }
-
-             @Override
-             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                 Log.d("DEBUG", "Fetch timeline error: ");
-             }
-         });
-     }
-
 
      @Override
      public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,8 +135,8 @@ import okhttp3.Headers;
         super.onActivityResult(requestCode, resultCode, data);
      }
 
-     private void populateHomeTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+     private void populateHomeTimeline(String maxId) {
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSuccess! " + json.toString());

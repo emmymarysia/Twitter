@@ -22,6 +22,7 @@ public class Tweet {
     public String mediaUrl;
     public boolean hasMedia;
     public String relTime;
+    public String tweetId;
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -30,15 +31,13 @@ public class Tweet {
 
     //empty constructor needed by the Parceler library
     public Tweet() {
-
     }
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
         if(jsonObject.has("full_text")) {
             tweet.body = jsonObject.getString("full_text");
-        }
-        else {
+        } else {
             tweet.body = jsonObject.getString("text");
         }
         tweet.createdAt = jsonObject.getString("created_at");
@@ -47,13 +46,13 @@ public class Tweet {
         if(media != null) {
             tweet.mediaUrl = media.getJSONObject(0).getString("media_url_https");
             tweet.hasMedia = true;
-        }
-        else {
+        } else {
             tweet.mediaUrl = "";
             tweet.hasMedia = false;
         }
         String jsonDate = jsonObject.getString("created_at");
         tweet.relTime = tweet.getRelativeTimeAgo(jsonDate);
+        tweet.tweetId = jsonObject.getString("id_str");
         return tweet;
     }
 
