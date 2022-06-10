@@ -49,7 +49,6 @@
         android:layout_marginEnd="55dp"
         android:paddingTop="5dp"
         android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
         app:layout_constraintTop_toBottomOf="@id/tvBody"
@@ -63,4 +62,23 @@
         android:text="2h"
         app:layout_constraintStart_toEndOf="@id/tvScreenName"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFavoriteCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="0"
+        app:layout_constraintStart_toEndOf="@id/ibFavorite"
+        app:layout_constraintTop_toTopOf="@id/ibFavorite"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/ibFavorite"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:srcCompat="@android:drawable/btn_star_big_off"
+        app:layout_constraintTop_toBottomOf="@id/ivMedia"
+        app:layout_constraintStart_toEndOf="@id/ivProfileImage"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

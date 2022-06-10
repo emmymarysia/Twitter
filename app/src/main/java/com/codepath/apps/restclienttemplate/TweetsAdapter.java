@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.List;
@@ -73,6 +75,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         ImageView ivMedia;
         TextView tvRelTime;
+        ImageButton ibFavorite;
+        TextView tvFavoriteCount;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +85,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvRelTime = itemView.findViewById(R.id.tvRelTime);
+            ibFavorite = itemView.findViewById(R.id.ibFavorite);
+            tvFavoriteCount = itemView.findViewById(R.id.tvFavoriteCount);
         }
 
         public void bind(Tweet tweet) {
@@ -88,13 +94,28 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName.setText(tweet.user.screenName);
             tvRelTime.setText(tweet.relTime);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            int radius = 30;
             if(tweet.hasMedia) {
-                Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
+                Glide.with(context).load(tweet.mediaUrl).centerInside().transform(new RoundedCorners(radius)).into(ivMedia);
                 ivMedia.setVisibility(View.VISIBLE);
             }
             else {
                 ivMedia.setVisibility(View.GONE);
             }
+
+            ibFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // if not already favorited
+                        // tell Twitter I want to favorite this
+                        // change the drawable to btn_star_big_on
+                        // increment the text inside tvFavoriteCount
+                    // else if already favorited
+                        // tell Twitter I want to unfavorite this
+                        // change the drawable back to btn_star_big_off
+                        // decrement the text inside tvFavoriteCount
+                }
+            });
         }
     }
 }

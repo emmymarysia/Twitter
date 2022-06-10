@@ -90,7 +90,8 @@ import okhttp3.Headers;
                         // do something here
                         return true;
                     case R.id.profile:
-                        // do something here
+                        Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
+                        startActivity(i);
                         return true;
                     case R.id.home:
                         //do something here
@@ -99,17 +100,6 @@ import okhttp3.Headers;
                 }
             }
         });
-
-        //find the button
-        /*
-        Button btLogout = findViewById(R.id.btLogout);
-        btLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onLogoutButton();
-                finish();
-            }
-        }); */
 
         populateHomeTimeline(null);
 
@@ -180,16 +170,5 @@ import okhttp3.Headers;
                 Log.e(TAG, "onFailure! " + response, throwable);
             }
         });
-    }
-
-    void onLogoutButton() {
-        //forget who's logged in
-        TwitterApp.getRestClient(this).clearAccessToken();
-
-        //navigate backwards to Login screen
-        Intent i = new Intent(this, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //this makes sure the back button won't work
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
     }
 }
