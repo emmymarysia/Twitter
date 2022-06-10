@@ -21,6 +21,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import okhttp3.Headers;
@@ -35,7 +37,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         this.tweets = tweets;
     }
 
-    //for each row, inflate the layout
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,22 +44,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
-    //bind values based on the position of the element
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //get the data at position
         Tweet tweet = tweets.get(position);
-        //bind the tweet with view holder
         holder.bind(tweet);
     }
 
-    //clean all elements of the recycler
     public void clear() {
         tweets.clear();
         notifyDataSetChanged();
     }
 
-    //add a list of items
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
         notifyDataSetChanged();
@@ -69,14 +65,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return tweets.size();
     }
 
-    //pass in the context and list of tweets
-
-    //for each row, inflate the layout
-
-    //bind values based on the position of the element
-
-    //define a viewholder
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView ivProfileImage;
         TextView tvBody;
@@ -105,6 +94,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ibReply = itemView.findViewById(R.id.ibReply);
             tvReplyCount = itemView.findViewById(R.id.tvReplyCount);
             tvUsername = itemView.findViewById(R.id.tvUsername);
+
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Tweet tweet) {
@@ -138,8 +129,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // pop up a compose screen
-                    // extra attribute: "in_reply_to_status_id"
                     Intent i = new Intent(context, ComposeActivity.class);
                     i.putExtra("isReplyToTweet", true);
                     i.putExtra("idOfTweetToReplyTo", tweet.tweetId);
@@ -163,7 +152,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
 
-                    // if not already favorited
                     if (!tweet.isFavorited) {
                         // tell Twitter I want to favorite this
                         TwitterApp.getRestClient(context).favoriteTweet(tweet.tweetId, new JsonHttpResponseHandler() {
@@ -177,11 +165,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                                 Log.e("adapter", "Tweet favorite failed");
                             }
                         });
-                        // change the drawable to btn_star_big_on
+                        // change the drawable to clicked
                         tweet.isFavorited = true;
                         Drawable favoriteImage = context.getDrawable(R.drawable.ic_vector_heart);
                         ibFavorite.setImageDrawable(favoriteImage);
-                        // increment the text inside tvFavoriteCount
                         tvFavoriteCount.setText(Integer.toString(tweet.favoriteCount + 1));
                         tweet.favoriteCount += 1;
                     } else {
@@ -197,16 +184,32 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                                 Log.e("adapter", "Tweet favorite failed");
                             }
                         });
-                        // change the drawable back to btn_star_big_off
+                        // change the drawable back to unclicked
                         tweet.isFavorited = false;
                         Drawable unfavoriteImage = context.getDrawable(R.drawable.ic_vector_heart_stroke);
                         ibFavorite.setImageDrawable(unfavoriteImage);
-                        // decrement the text inside tvFavoriteCount
                         tvFavoriteCount.setText(Integer.toString(tweet.favoriteCount - 1));
                         tweet.favoriteCount -= 1;
                     }
                 }
             });
+        }
+
+        @Override
+        public void onClick(View v) {
+            //get item position
+            int position = getAdapterPosition();
+            //make sure position is valid/exists in the view
+            if(position != RecyclerView.NO_POSITION) {
+                //get the Movie at that position in the list
+                Tweet tweet = tweets.get(position);
+                //create an intent for the new activity
+                Intent intent = new Intent(context, TweetDetailActivity.class);
+                //serialize the movie using parceler, use its short name as a key
+                intent.putExtra("tweet", Parcels.wrap(tweet));
+                //show the activity
+                context.startActivity(intent);
+            }
         }
     }
 }

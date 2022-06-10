@@ -46,15 +46,10 @@ import okhttp3.Headers;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 adapter.clear();
                 populateHomeTimeline(null);
                 swipeContainer.setRefreshing(false);
@@ -68,13 +63,9 @@ import okhttp3.Headers;
 
         client = TwitterApp.getRestClient(this);
 
-
-        //find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
-        //initialize the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
-        //recycler view setup: layout manager and adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
@@ -84,17 +75,20 @@ import okhttp3.Headers;
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.messages:
-                        // do something here
+                        Intent messageIntent = new Intent(TimelineActivity.this, MessagesActivity.class);
+                        startActivity(messageIntent);
                         return true;
                     case R.id.notifications:
-                        // do something here
+                        Intent notificationsIntent = new Intent(TimelineActivity.this, NotificationsActivity.class);
+                        startActivity(notificationsIntent);
                         return true;
                     case R.id.profile:
-                        Intent i = new Intent(TimelineActivity.this, ProfileActivity.class);
-                        startActivity(i);
+                        Intent profileIntent = new Intent(TimelineActivity.this, ProfileActivity.class);
+                        startActivity(profileIntent);
                         return true;
                     case R.id.home:
-                        //do something here
+                        Intent homeIntent = new Intent(TimelineActivity.this, TimelineActivity.class);
+                        startActivity(homeIntent);
                         return true;
                     default: return true;
                 }
@@ -117,7 +111,7 @@ import okhttp3.Headers;
 
      @Override
      public boolean onCreateOptionsMenu(Menu menu) {
-        //inflate the menu; this adds items to the action bar if it is present
+        // inflate the menu; this adds items to the action bar if it is present
          getMenuInflater().inflate(R.menu.menu_main, menu);
          return true;
      }
@@ -154,7 +148,6 @@ import okhttp3.Headers;
         client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "onSuccess! " + json.toString());
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));

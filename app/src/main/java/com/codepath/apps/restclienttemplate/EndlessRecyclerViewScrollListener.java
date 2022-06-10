@@ -47,9 +47,6 @@ public int getLastVisibleItem(int[] lastVisibleItemPositions) {
         return maxSize;
         }
 
-// This happens many times a second during a scroll, so be wary of the code you place here.
-// We are given a few useful parameters to help us work out if we need to load some more data,
-// but first we check if we are waiting for the previous load to finish.
 @Override
 public void onScrolled(RecyclerView view, int dx, int dy) {
         int lastVisibleItemPosition = 0;
