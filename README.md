@@ -50,7 +50,11 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://i.imgur.com/XKjRTvx.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://i.imgur.com/XKjRTvx.gif' title='Video
+
+https://user-images.githubusercontent.com/26172675/173164935-7f44c619-d824-4767-a968-afcf51789be4.mp4
+
+ Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
